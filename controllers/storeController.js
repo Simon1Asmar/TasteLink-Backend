@@ -86,27 +86,29 @@ export const createStore = async (req, res, next) => {
 
 export const updateStore = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const {
-      name,
-      location,
-    } = req.body;
+    // const { id } = req.params;
+    // const {
+    //   name,
+    //   location,
+    // } = req.body;
 
-    if (!isValidObjectId(id)) {
-      throw new Error("ID not valid");
-    }
+    // if (!isValidObjectId(id)) {
+    //   throw new Error("ID not valid");
+    // }
 
-    const store = await Store.findById(id);
+    // const store = await Store.findById(id);
 
-    if (!store) {
-      throw new Error("Store does not exist");
-    }
+    // if (!store) {
+    //   throw new Error("Store does not exist");
+    // }
 
-    store.name = name || store.name;
-    store.location = location || store.location;
+    // store.name = name || store.name;
+    // store.location = location || store.location;
 
-    const updatedStore = await store.save();
-    res.status(STATUS_CODE.OK).json(updatedStore);
+    // const updatedStore = await store.save();
+    // res.status(STATUS_CODE.OK).json(updatedStore);
+    res.status(STATUS_CODE.OK).json();
+    
   } catch (error) {
     next(error);
   }
@@ -137,6 +139,66 @@ export const deleteStore = async (req, res, next) => {
     await Store.deleteOne(store);
 
     res.status(STATUS_CODE.NO_CONTENT).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const setLocation = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { lat, long } = req.body;
+
+    if (!isValidObjectId(id)) {
+      throw new Error("ID not valid");
+    }
+
+    const store = await Store.findById(id);
+
+    if (!store) {
+      throw new Error("Store does not exist");
+    }
+
+    // make sure latitude and longitude are provided
+    if (!lat || !long) {
+      throw new Error("Latitude and Longitude are required");
+    }
+
+    // Set the store's location
+    store.location = [{ lat: lat, long: long }];
+
+    const updatedStore = await store.save();
+    res.status(STATUS_CODE.OK).json(updatedStore);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateName = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    if (!isValidObjectId(id)) {
+      throw new Error("ID not valid");
+    }
+
+    const store = await Store.findById(id);
+
+    if (!store) {
+      throw new Error("Store does not exist");
+    }
+
+    // Make sure a new name is provided
+    if (!name) {
+      throw new Error("Name is required");
+    }
+
+    // Update the store's name
+    store.name = name;
+
+    const updatedStore = await store.save();
+    res.status(STATUS_CODE.OK).json(updatedStore);
   } catch (error) {
     next(error);
   }

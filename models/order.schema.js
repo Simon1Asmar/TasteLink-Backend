@@ -26,8 +26,8 @@ const orderSchema = new mongoose.Schema({
   },
   orderStatus: {
     type: String,
-    enum: ["waiting", "preparing", "ready", "complete"],
-    default: "waiting",
+    enum: ["none", "waiting", "preparing", "ready", "complete"],
+    default: "none",
   },
 });
 

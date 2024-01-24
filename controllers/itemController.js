@@ -40,6 +40,12 @@ export const createItem = async (req, res, next) => {
       throw new Error("ItemName, price, and restaurant are required");
     }
 
+    const existingRestaurant = await Store.findById(restaurant);
+
+    if (!existingRestaurant || !isValidObjectId(restaurant)) {
+      throw new Error("Restaurant not found");
+    }
+
     const newItem = await Item.create({
       itemName,
       imageURL,

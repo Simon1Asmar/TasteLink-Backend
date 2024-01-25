@@ -8,11 +8,13 @@ import orderItemsRoutes from "./routes/orderItems.routes.js"
 import ordersRoutes from "./routes/orders.routes.js"
 import storeRoutes from "./routes/store.routes.js"
 import usersRoutes from "./routes/users.routes.js"
+import cors from "cors"
 
 const server = express();
 
 dotenv.config();
 
+server.use(cors());
 server.use(express.json());
 
 server.use("/api/v1/items", itemsRoutes);

@@ -93,7 +93,7 @@ export const loginUser = async (req, res, next) => {
 
     if (comparePass && existingUser) {
       const token = generateAuthToken(existingUser);
-      res.status(STATUS_CODE.OK).json({ token });
+      res.status(STATUS_CODE.OK).json({ token, existingUser });
     } else {
       throw new Error("Incorrect email or password");
     }

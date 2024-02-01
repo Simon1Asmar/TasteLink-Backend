@@ -23,6 +23,7 @@ export const getUserById = async (req, res, next) => {
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("ID not valid");
     }
 
@@ -33,6 +34,7 @@ export const getUserById = async (req, res, next) => {
       .populate("ownedRestaurants");
 
     if (!user) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("User does not exist");
     }
 
@@ -47,12 +49,14 @@ export const createUser = async (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
 
     if (!(firstName && lastName && email && password)) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("First Name, Last Name, Email, and Password are required");
     }
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("User already exists");
     }
 
@@ -80,12 +84,14 @@ export const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!(email && password)) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("Email and password must be filled");
     }
 
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("User does not exist");
     }
 
@@ -95,6 +101,7 @@ export const loginUser = async (req, res, next) => {
       const token = generateAuthToken(existingUser);
       res.status(STATUS_CODE.OK).json({ token, existingUser });
     } else {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("Incorrect email or password");
     }
   } catch (error) {
@@ -108,12 +115,14 @@ export const updateUser = async (req, res, next) => {
     const { firstName, lastName, email, password, currentOrders, jobsAppliedTo, previousOrders, ownedRestaurants } = req.body;
 
     if (!isValidObjectId(id)) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("ID not valid");
     }
 
     const user = await User.findById(id);
 
     if (!user) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("User does not exist");
     }
 
@@ -143,12 +152,14 @@ export const deleteUser = async (req, res, next) => {
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("ID not valid");
     }
 
     const user = await User.findById(id);
 
     if (!user) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("User does not exist");
     }
 

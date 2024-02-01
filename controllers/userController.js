@@ -47,12 +47,14 @@ export const createUser = async (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
 
     if (!(firstName && lastName && email && password)) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("First Name, Last Name, Email, and Password are required");
     }
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("User already exists");
     }
 
@@ -80,12 +82,14 @@ export const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!(email && password)) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("Email and password must be filled");
     }
 
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("User does not exist");
     }
 
@@ -95,6 +99,7 @@ export const loginUser = async (req, res, next) => {
       const token = generateAuthToken(existingUser);
       res.status(STATUS_CODE.OK).json({ token, existingUser });
     } else {
+      res.status(STATUS_CODE.BAD_REQUEST);
       throw new Error("Incorrect email or password");
     }
   } catch (error) {
